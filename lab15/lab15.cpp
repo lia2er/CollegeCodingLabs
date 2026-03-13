@@ -5,7 +5,7 @@
 
 using namespace std; // Використання простору імен std
 
-float shX(float x) { // обчислення гіперболічного синуса через степеневий ряд
+float shX(float x) { // функція типу float
   const float eps = 1e-4f; // ініціалізація константи
   // ініціалізація змінних
   float sum = 0.0f; // змінна для накопичення суми
@@ -17,13 +17,11 @@ float shX(float x) { // обчислення гіперболічного син
 
     // обчислення факторіала у циклі
     float fact = 1.0f;
-    for (int i = 1; i <= k; i++)
-      fact *= i;
+    for (int i = 1; i <= k; i++) fact *= i;
 
-    float term = powf(x, k) / fact; // член ряду
+    float term = powf(x, k) / fact; // обчисленння члену ряду
 
-    if (fabsf(term) < eps) // перевірка умов для зупинки підпрограми
-      break;
+    if (fabsf(term) < eps) break;
 
     sum += term; // сумування
     n++; // збільшення члена ряду на 1
