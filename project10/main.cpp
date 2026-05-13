@@ -1,78 +1,73 @@
-// підключення заголовкових файлів для:
-#include <iostream> // потоків вводу/виводу
-#include <vector> // динамічних масивів/векторів
+#include <iostream>
+#include <vector>
+#include <algorithm>
 
-using namespace std; // використання простору імен std
+using namespace std;
 
-// реалізація класу Compl
 class Compl {
-  private: // вміст private доступний тільки всередині цього класу
-    float x,y; // оголошення змінних
-  public: // до вмісту public можна звернутись через об`єкт
-    Compl(float X, float Y) : x(X), y(Y) { // ініціалізація конструктора
-      if ( x == 0 and y == 0) // перевірка значеннь
-        throw "Undefined complex number phase"; // кидає виняток в вигляді рядка
+  private:
+    float x,y;
+  public:
+    Compl(float X, float Y) : x(X), y(Y) { 
+      if ( x == 0 and y == 0) 
+        throw "Undefined complex number phase"; 
+    }
+    // в аргумент подається правий операнд
+    Compl operator*(Compl const &c) { 
+      return Compl(x * c.x - y * c.y, x * c.y + y * c.x); 
     }
 
-    Compl operator*(Compl const &c) { // перевантаження оператора множення
-      return Compl(x * c.x - y * c.y, x * c.y + y * c.x); // повернення значення
-    }
+    void print() {cout << "x: " << x << ", y: " << y << endl;} 
+    float getX() {return x;} 
+    float getY() {return y;} 
 
-    void print() {cout << "x: " << x << ", y: " << y << endl;} // метод для друку даних
-    float getX() {return x;} // метод для отримання x
-    float getY() {return y;} // метод для отримання y
-
-    ~Compl() {} // деструктор
+    ~Compl() {} 
 };
 
-// реалізація класу Fraction
 class Fraction {
-  private: // вміст private доступний тільки всередині цього класу
-    int m,n; // оголошення змінних
-  public: // до вмісту public можна звернутись через об`єкт
-    Fraction(int M, int N) : m(M), n(N) { // ініціалізація конструктора
-      if (n == 0) // перевірка значення
-        throw "Dividing by zero"; // кидає виняток в вигляді рядка
+  private: 
+    int m,n; 
+  public: 
+    Fraction(int M, int N) : m(M), n(N) { 
+      if (n == 0) 
+        throw "Dividing by zero"; 
     }
 
-    Fraction operator*(Fraction const &c) { // перевантаження оператора множення
-      return Fraction(m * c.m, n * c.n); // повернення значення
+    Fraction operator*(Fraction const &c) { 
+      return Fraction(m * c.m, n * c.n); 
     }
 
-    void print() {cout << "m: " << m << ", n: " << n << endl;} // метод для друку даних
+    void print() {cout << "m: " << m << ", n: " << n << endl;} 
+    float getM() {return m;} 
+    float getN() {return n;} 
 
-    float getM() {return m;} // метод для отримання m
-    float getN() {return n;} // метод для отримання n
-
-    ~Fraction() {} // деструктор
+    ~Fraction() {} 
 };
 
-template<class Something> // шаблонна функція з типом Something
-Something Mult(Something &a, Something &b) { // 2 параметри заголовкового типу
-  return a * b; // повернення добутку
+template<typename Something> 
+Something Mult(Something &a, Something &b) { 
+  return a * b; 
 }
 
 int main() {
-  Compl ac(3.2, 5.9), bc(9.1, 0.2); // ініціалізація об`єктів класу Comp
-  Fraction af(3,2), bf(9,7); // ініціалізація об`єктів класу Fraction
+  Compl ac(3.2, 5.9), bc(9.1, 0.2); 
+  Fraction af(3,2), bf(9,7); 
 
-  try { // `спроба` виконати код в блоці
-
-    cout << "Complex number multiplication(operator):\n"; // друк тексту
-    Compl cc = ac * bc; // ініціалізація об`єкта cc з добутком інших об`єктів
-    cc.print(); // друк цього об`єктa
+  try { 
+    cout << "Complex number multiplication(operator):\n"; 
+    Compl cc = ac * bc; 
+    cc.print(); 
     cout << "Complex number multiplication(function):\n";
-    cc = Mult(ac, bc); // виклик функції для добутку і присвоєння її результату сс
-    cc.print(); // друк об`єктa сс
+    cc = Mult(ac, bc); 
+    cc.print(); 
 
-    cout << "Fraction number multiplication(operator):\n"; // друк тексту
-    Fraction cf = af * bf; // ініціалізація об`єкта cf з добутком інших об`єктів
-    cf.print(); // друк цього об`єктa
+    cout << "Fraction number multiplication(operator):\n"; 
+    Fraction cf = af * bf; 
+    cf.print(); 
     cout << "Fraction number multiplication(function):\n";
-    cf = Mult(af, bf); // виклик функції для добутку і присвоєння її результату сf
-    cf.print(); // друк об`єктa сf
+    cf = Mult(af, bf); 
+    cf.print(); 
     
-    // ініціалізація векторів відповідних типів
     vector<Compl> ComplexV = {
       Compl(3.2, 4.6),
       Compl(2.3, 1.4),
@@ -83,29 +78,25 @@ int main() {
     vector<Fraction> FractionV = {
       Fraction(3, 4),
       Fraction(2, 1),
-      Fraction(9, 3),
+      Fraction(9, 5),
       Fraction(5, 4),
       Fraction(3, 2)};
 
     cout << "Sorted vector of complex numbers: \n";
-    sort(ComplexV.begin(), ComplexV.end(), // сортування від початку вектора до кінця
-        [](Compl &a, Compl &b) // предикант з lambda-функцією 
-        {return a.getY() > b.getY();}); // порівнює отримані значення і повертає bool
-                                        
-    for(Compl &a : ComplexV) // цикл з ітерацією через весь вектор
-      a.print(); // звернення до методу print(), об`єкта `а`
-    cout << endl; // перехід на новий рядок
+    sort(ComplexV.begin(), ComplexV.end(), 
+        [](Compl &a, Compl &b) {return a.getY() > b.getY();}); 
+    
+    for(Compl &a : ComplexV) a.print(); 
+    cout << endl; 
 
     cout << "Sorted vector of fractions: \n";
-    sort(FractionV.begin(), FractionV.end(), // сортування від початку вектора до кінця 
-        [](Fraction &a, Fraction &b) // предикант з lambda-функцією 
-        {return a.getN() < b.getN();}); // порівнює отримані значення і повертає bool
+    sort(FractionV.begin(), FractionV.end(), 
+        [](Fraction &a, Fraction &b) {return a.getN() < b.getN();}); 
 
-    for(Fraction &a : FractionV) // цикл з ітерацією через весь вектор
-      a.print(); // звернення до методу print(), об`єкта `а`
-    cout << endl; // перехід на новий рядок
+    for(Fraction &a : FractionV) a.print(); 
+    cout << endl; 
   }
-  catch (const char *s) { // блок для обробки помилок
-    cout << s << endl; // виведення рядка помилки
+  catch (const char *s) { 
+    cout << s << endl;
   }
 }
